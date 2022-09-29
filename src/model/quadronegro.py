@@ -60,9 +60,11 @@ class Tarefa(object):
     @classmethod
     def listar_submissoes_aluno(cls, estudante:Estudante): 
         """Lista todas as submissões de um dado aluno"""
-        # TODO: implementar
-        pass
-
+        submissoes_aluno = []
+        for submissao in cls.submissoes:
+            if submissao in estudante.submissoes:
+                submissoes_aluno.append(submissao)
+        return submissoes_aluno
 
 class Submissao(object):
     def __init__(self, tarefa, resposta):
@@ -80,16 +82,40 @@ class Submissao(object):
 
 class FachadaTarefa:
     def listar_tarefas():
-        """Deve retornar uma lista com o nome de todas as tarefas"""
-        pass
+        gabaritos = []
+        for tarefa in Tarefa.tarefas:
+            gabaritos.append(tarefa.gabarito)
+        return gabaritos
+            
 
     def listar_notas_estudante(nome_tarefa:str, nome_estudante:str):
-        """Deve retornar uma lista com as notas que o estudante obteve em todas as suas submissões para uma dada tarefa"""
-        pass 
+        submissoes = Tarefa.submissoes
+        estudantes = Estudante.estudantes
+
+        for e in estudantes:
+            if e.nome == nome_estudante:
+                estud = e
+
+        notas = []
+
+        for s in estud.submissoes: 
+            if s.tarefa.gabarito == nome_tarefa: 
+                notas.append(s.nota)
+
+        return notas 
 
     def listar_disciplinas(nome_estudante:str): 
-        """Deve retornar os nomes de todas as disciplinas que alguém cursa"""
-        pass 
+        estudantes = Estudante.estudantes
+        disciplinas = []
+
+        for e in estudantes:
+            if e.nome == nome_estudante:
+                estud = e
+
+        for t in estud.turmas:
+            disciplinas.append(t.disciplina.nome)
+
+        return disciplinas
 
 if __name__ == "__main__":
     d = Disciplina("DevLife")
@@ -99,6 +125,10 @@ if __name__ == "__main__":
     tarefa = Tarefa(tur, "Pedro Álvares Cabral")
     tur.tarefas.append(tarefa)
     tarefa.submeter("Pedro A", estudante, datetime.datetime(2022, 9, 16))
+    print(Tarefa.submissoes)
+    print(estudante.turmas)
+    print(tarefa.turma)
+    print(FachadaTarefa.listar_disciplinas(estudante))
     
 
 
